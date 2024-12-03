@@ -45,9 +45,9 @@ public class Parser  {
 
     //checks if there is more work to do
     public boolean hasMoreLines() throws IOException {
-        do{this.nextInstruction = reader.readLine();}
+        this.nextInstruction = reader.readLine();
         //skips empty lines and comment lines
-        while(isLineComment(this.nextInstruction.trim()) || this.nextInstruction.trim().isEmpty()){
+        while((isLineComment(this.nextInstruction.trim())) || (this.nextInstruction.trim().isEmpty())){
             this.nextInstruction =  reader.readLine();
             }
         
@@ -64,7 +64,7 @@ public class Parser  {
     //if there is a valid next instruction return true else false
     public boolean advance() throws IOException {
         if(this.hasMoreLines()){
-            this.currentInstruction = this.nextInstruction;
+            this.currentInstruction = this.nextInstruction.trim();
             return true;
         }
       return false;

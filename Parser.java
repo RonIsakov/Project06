@@ -6,50 +6,79 @@ import java.io.IOException;
 
 //Parser cunstructor checking if file exists if not throws exeption.
 public class Parser  {
-    private File hackSourcefile;
+    private BufferedReader reader;
     private String currentInstruction;
+    private String nextInstruction;
 
-    public Parser(File hackSourcefile) {
-        if (hackSourcefile == null || !hackSourcefile.exists()){
+    public Parser(File hackSourceFile) throws IOException {
+        if (hackSourceFile == null ){
             throw new IllegalArgumentException("the hack code file is empty!");
         }
-        this.hackSourcefile = hackSourcefile;
-        this.currentInstruction = currentInstruction;
+        if(!hackSourceFile.exists()){
+            throw new IllegalArgumentException("the hack code file doesnt exist!");  
+        }
+        this.reader = new BufferedReader(new FileReader(hackSourceFile));
+        this.currentInstruction = null;
+        this.nextInstruction = null;
     }
 
-    
-    //checks if there is more work to do
-    public boolean hasMoreLines() throws IOException {
-    String currLine;
-    BufferedReader reader = new BufferedReader(new FileReader(hackSourcefile));
-    currLine =  reader.readLine();
-    reader.close();
-        if(currLine.length() >= 1){
+
+    //checks if the string is a comment
+    public boolean isLineComment(String line){
+        if(line.startsWith("//") ){
             return true;
         }
         else{
             return false;
         }
     }
+// Found "//", return the part after it // No "//" found, return the original string
+    public String trimUntilComment(String line) {
+        int commentIndex = line.indexOf("//");
+        if (commentIndex != -1) {  
+            return line.substring(commentIndex);
+        }
+        return line;
+    }
+    
 
-    //gets  the next instruction and makes it the current instruction 
-    public void advance() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(hackSourcefile));
-        this.currentInstruction = reader.readLine();
-        reader.close();
+
+    //checks if there is more work to do
+    public boolean hasMoreLines() throws IOException {
+        do{this.nextInstruction = reader.readLine();}
+        //skips empty lines and comment lines
+        while(isLineComment(this.nextInstruction.trim()) || this.nextInstruction.trim().isEmpty()){
+            this.nextInstruction =  reader.readLine();
+            }
+        
+            if(this.nextInstruction.equals(null)){
+                return false;
+            }
+            this.nextInstruction = trimUntilComment(this.currentInstruction);
+            return true;
+        }   
+        
+    
+
+    //gets the next instruction and makes it the current instruction 
+    //if there is a valid next instruction return true else false
+    public boolean advance() throws IOException {
+        if(this.hasMoreLines()){
+            this.currentInstruction = this.nextInstruction;
+            return true;
+        }
+      return false;
     }
 
 
     //returns the type of the cuurent instruction as a constant
     public String InstructionType() throws IOException{
-        if((currentInstruction.charAt(0) == '@') ){
+        if(currentInstruction.startsWith("@")){
             return "A_INSTRUCTION";
         }
-        
-        if(currentInstruction.charAt(0) == '('){
+        if(currentInstruction.startsWith("(")){
             return "L_INSTRUCTION";
         }
-
         return "C_INSTRUCTION";
     }
 

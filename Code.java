@@ -9,9 +9,9 @@ public class Code {
 		this.jumpTable = new Hashtable<String, String>();
 		this.writejumpTable();
 		this.compTable = new Hashtable<String, String>();
-		this.writeCompMnemonics();
+		this.writeCompTable();
 		this.destTable = new Hashtable<String, String>();
-		this.writeDestMnemonics();
+		this.writeDestTable();
 	}
 	
 	private void writejumpTable() {

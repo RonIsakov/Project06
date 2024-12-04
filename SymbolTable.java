@@ -26,7 +26,7 @@ public class SymbolTable {
         }
         
     public SymbolTable(){
-    this.symbolTable = BasicSymbolTable(symbolTable);
+        this.symbolTable = BasicSymbolTable(symbolTable);
     }
 
     public void addEntry(String symbol, Integer address){
@@ -38,6 +38,6 @@ public class SymbolTable {
     }
 
     public Integer getAdress(String symbol){
-        return this.getAdress(symbol);
+        return this.symbolTable.get(symbol);
     }
 }

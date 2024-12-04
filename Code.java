@@ -25,7 +25,7 @@ public class Code {
 		this.jumpTable.put("JMP", "111");
 	}
 	
-	private void writeCompMnemonics() {
+	private void writeCompTable() {
 		this.compTable.put("0", "0101010");
 		this.compTable.put("1", "0111111");
 		this.compTable.put("-1", "0111010");
@@ -56,7 +56,7 @@ public class Code {
 		this.compTable.put("D|M", "1010101");
 	}
 	
-	private void writeDestMnemonics() {
+	private void writeDestTable() {
 		this.destTable.put("NULL", "000");
 		this.destTable.put("M", "001");
 		this.destTable.put("D", "010");

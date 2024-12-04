@@ -85,10 +85,10 @@ public class Parser  {
 
     public String symbol() throws IOException{
         if(InstructionType().equals("A_INSTRUCTION")){
-            return currentInstruction.substring(1, currentInstruction.length() - 1);
+            return currentInstruction.substring(1);
         } 
         else if(InstructionType().equals("L_INSTRUCTION")){
-            return currentInstruction.substring(1, currentInstruction.length() - 2);
+            return currentInstruction.substring(1, currentInstruction.length() - 1);
         }
         else{
             throw new IllegalArgumentException("not an A or an L instruction!");

@@ -36,9 +36,9 @@ public class Parser  {
     public String trimUntilComment(String line) {
         int commentIndex = line.indexOf("//");
         if (commentIndex != -1) {  
-            return line.substring(commentIndex);
+            return line.substring(0, commentIndex).trim();
         }
-        return line;
+        return line.trim(); // If no comment, just trim whitespace
     }
     
 
@@ -51,7 +51,7 @@ public class Parser  {
             this.nextInstruction =  reader.readLine();
             }
         
-            if(this.nextInstruction.equals(null)){
+            if(this.nextInstruction == null){
                 return false;
             }
             this.nextInstruction = trimUntilComment(this.currentInstruction);

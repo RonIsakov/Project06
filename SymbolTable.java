@@ -37,7 +37,7 @@ public class SymbolTable {
         return this.symbolTable.contains(symbol);
     }
 
-    public Integer getAdress(String symbol){
+    public Integer getAddress(String symbol){
         return this.symbolTable.get(symbol);
     }
 }

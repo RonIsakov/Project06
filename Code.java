@@ -69,6 +69,9 @@ public class Code {
     }
 
     public String dest(String destAssembly){
+		if (destAssembly == null || destAssembly.isEmpty()) {
+			return destTable.get("NULL"); // Use "NULL" as the default key for no dest
+		}
         return this.destTable.get(destAssembly);
     }
 

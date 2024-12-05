@@ -45,10 +45,6 @@ public String trimUntilComment(String line) {
     return line.trim(); // If no comment, just trim whitespace
 }
 
-
-    
-
-
     //checks if there is more work to do
     public boolean hasMoreLines() throws IOException {
         // Read the next line
@@ -117,20 +113,25 @@ public String trimUntilComment(String line) {
 
 
     //Returns the instructions comp feild
-    public String comp() throws IOException{
-
-        if(currentInstruction.contains("=")){
-        String[] split = currentInstruction.split("=", 2);
-            if(split[1].contains(";")){
-                String[] split2 = currentInstruction.split(";", 2);
-                return split2[0].trim(); 
+    public String comp() throws IOException {
+        if (currentInstruction.contains("=")) {
+            // Split on "=" to get the part after the "="
+            String[] split = currentInstruction.split("=", 2);
+            // Check if the part after "=" contains ";"
+            if (split[1].contains(";")) {
+                // Split on ";" to get the comp part before ";"
+                return split[1].split(";")[0].trim();
+            } else {
+                // No ";" after "=", return the part after "="
+                return split[1].trim();
             }
-            else{
-                 return split[1].trim();
-            }
+        } else if (currentInstruction.contains(";")) {
+            // If there's no "=", the whole comp is before ";"
+            return currentInstruction.split(";")[0].trim();
         }
-        return null;
-        }
+        throw new IllegalArgumentException("Malformed C_INSTRUCTION: " + currentInstruction);
+    }
+    
 
 
     //Returns the instructions dest feild

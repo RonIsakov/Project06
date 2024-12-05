@@ -76,7 +76,11 @@ public class Code {
         return this.compTable.get(destAssembly);
     }
 
-    public String jump(String destAssembly){
-        return this.jumpTable.get(destAssembly);
-    }
+    public String jump(String destAssembly) {
+		if (destAssembly == null || destAssembly.isEmpty()) {
+			return jumpTable.get("NULL"); // Use "NULL" as the default key for no jump
+		}
+		return jumpTable.get(destAssembly);
+	}
+	
 }

@@ -1,4 +1,5 @@
 
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -33,42 +34,52 @@ public class Parser  {
         }
     }
 // Found "//", return the part after it // No "//" found, return the original string
-    public String trimUntilComment(String line) {
-        int commentIndex = line.indexOf("//");
-        if (commentIndex != -1) {  
-            return line.substring(0, commentIndex).trim();
-        }
-        return line.trim(); // If no comment, just trim whitespace
+public String trimUntilComment(String line) {
+    if (line == null) {
+        return ""; // Return an empty string if line is null
     }
+    int commentIndex = line.indexOf("//");
+    if (commentIndex != -1) {  
+        return line.substring(0, commentIndex).trim();
+    }
+    return line.trim(); // If no comment, just trim whitespace
+}
+
+
     
 
 
     //checks if there is more work to do
     public boolean hasMoreLines() throws IOException {
+        // Read the next line
         this.nextInstruction = reader.readLine();
-        //skips empty lines and comment lines
-        while((isLineComment(this.nextInstruction.trim())) || (this.nextInstruction.trim().isEmpty())){
-            this.nextInstruction =  reader.readLine();
-            }
-        
-            if(this.nextInstruction == null){
-                return false;
-            }
-            this.nextInstruction = trimUntilComment(this.currentInstruction);
-            return true;
-        }   
+    
+        // Skip blank lines and comment lines
+        while (this.nextInstruction != null && 
+               (isLineComment(this.nextInstruction.trim()) || this.nextInstruction.trim().isEmpty())) {
+            this.nextInstruction = reader.readLine(); // Read the next line
+        }
+    
+        // If we reach here, either there are no more lines, or nextInstruction is valid
+        return this.nextInstruction != null;
+    }
+    
+    
+    
         
     
 
     //gets the next instruction and makes it the current instruction 
     //if there is a valid next instruction return true else false
     public boolean advance() throws IOException {
-        if(this.hasMoreLines()){
+        if (this.nextInstruction != null || this.hasMoreLines()) {
             this.currentInstruction = this.nextInstruction.trim();
+            this.nextInstruction = null; // Clear `nextInstruction` for the next call
             return true;
         }
-      return false;
+        return false;
     }
+    
 
 
     //returns the type of the cuurent instruction as a constant

@@ -1,3 +1,4 @@
+
 import java.util.Hashtable;
 public class SymbolTable {
 
@@ -35,7 +36,7 @@ public class SymbolTable {
     }
 
     public boolean contains(String symbol){
-        return this.symbolTable.contains(symbol);
+        return this.symbolTable.containsKey(symbol);
     }
 
     public Integer getAddress(String symbol){

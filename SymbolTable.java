@@ -3,7 +3,6 @@ import java.util.Hashtable;
 public class SymbolTable {
 
     Hashtable<String, Integer> symbolTable = new Hashtable<>();
-    static int instructionAddress = 16;
 
         static Hashtable<String, Integer> BasicSymbolTable (Hashtable <String, Integer> symbolTable){
             symbolTable.put("R0", 0);

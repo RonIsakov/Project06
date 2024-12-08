@@ -2,6 +2,7 @@ import java.util.Hashtable;
 public class SymbolTable {
 
     Hashtable<String, Integer> symbolTable = new Hashtable<>();
+    static int instructionAddress = 16;
 
         static Hashtable<String, Integer> BasicSymbolTable (Hashtable <String, Integer> symbolTable){
             symbolTable.put("R0", 0);
@@ -40,4 +41,13 @@ public class SymbolTable {
     public Integer getAddress(String symbol){
         return this.symbolTable.get(symbol);
     }
+    
+    public void increment(){
+        instructionAddress++;
+
+        if(instructionAddress == 24576 || instructionAddress == 16384){
+            instructionAddress++;
+        }
+    }
+
 }

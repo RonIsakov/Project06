@@ -13,7 +13,6 @@ public class HackAssembler {
             // initialize components
             SymbolTable symbolTable = new SymbolTable();
             Code code = new Code();
-
             // first pass: build symbol table with labels
             firstPass(inputFile, symbolTable);
 
@@ -32,9 +31,10 @@ public class HackAssembler {
             SymbolTable.instructionAddress++;
         }
     }
-
+    
     private static void firstPass(File inputFile, SymbolTable symbolTable) throws IOException {
         Parser parser = new Parser(inputFile);
+        int i = 0;
 
         while (parser.hasMoreLines()) {
             parser.advance();
@@ -42,9 +42,15 @@ public class HackAssembler {
 
             if (instructionType.equals("L_INSTRUCTION")) {
                 String label = parser.symbol();
-                symbolTable.addEntry(label, SymbolTable.instructionAddress);
-                increment();
-            } 
+                if (!symbolTable.contains(label)) {
+                    symbolTable.addEntry(label, i);
+                    increment();
+                }
+            }
+            else{
+                i++;
+
+            }
         }
     }
 
@@ -65,12 +71,18 @@ public class HackAssembler {
                     address = Integer.parseInt(symbol);
                 } else {
                     // else: symbol address
-                    if (!symbolTable.contains(symbol)) {
+                    if (symbolTable.contains(symbol)) {
+                        System.out.println("nichnas " + symbol);
+                        address = symbolTable.getAddress(symbol);
+                    }
+                    else{
                         symbolTable.addEntry(symbol, SymbolTable.instructionAddress);
                         increment();
+                        address = symbolTable.getAddress(symbol);
+                        System.out.println("not nichnas " + symbol);
                     }
-                    address = symbolTable.getAddress(symbol);
                 }
+                System.out.println(address);
 
                 writer.write(String.format("0%15s", Integer.toBinaryString(address)).replace(' ', '0'));
                 writer.newLine();

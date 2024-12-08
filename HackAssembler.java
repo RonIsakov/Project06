@@ -25,9 +25,16 @@ public class HackAssembler {
         }
     }
 
+    public static void increment(){
+        SymbolTable.instructionAddress++;
+
+        if(SymbolTable.instructionAddress == 24576 || SymbolTable.instructionAddress == 16384){
+            SymbolTable.instructionAddress++;
+        }
+    }
+
     private static void firstPass(File inputFile, SymbolTable symbolTable) throws IOException {
         Parser parser = new Parser(inputFile);
-        int instructionAddress = 0;
 
         while (parser.hasMoreLines()) {
             parser.advance();
@@ -35,22 +42,21 @@ public class HackAssembler {
 
             if (instructionType.equals("L_INSTRUCTION")) {
                 String label = parser.symbol();
-                symbolTable.addEntry(label, instructionAddress);
-            } else {
-                instructionAddress++;
-            }
+                symbolTable.addEntry(label, SymbolTable.instructionAddress);
+                increment();
+            } 
         }
     }
 
     private static void secondPass(File inputFile, File outputFile, SymbolTable symbolTable, Code code) throws IOException {
         Parser parser = new Parser(inputFile);
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-        int variableAddress = 16;
 
         while (parser.hasMoreLines()) {
             parser.advance();
             String instructionType = parser.InstructionType();
 
+            // if the instruction is A instrucrion
             if (instructionType.equals("A_INSTRUCTION")) {
                 String symbol = parser.symbol();
                 int address;
@@ -60,13 +66,16 @@ public class HackAssembler {
                 } else {
                     // else: symbol address
                     if (!symbolTable.contains(symbol)) {
-                        symbolTable.addEntry(symbol, variableAddress++);
+                        symbolTable.addEntry(symbol, SymbolTable.instructionAddress);
+                        increment();
                     }
                     address = symbolTable.getAddress(symbol);
                 }
 
                 writer.write(String.format("0%15s", Integer.toBinaryString(address)).replace(' ', '0'));
                 writer.newLine();
+
+                // if the instruction is C instruction
             } else if (instructionType.equals("C_INSTRUCTION")) {
                 String dest = code.dest(parser.dest());
                 String comp = code.comp(parser.comp());

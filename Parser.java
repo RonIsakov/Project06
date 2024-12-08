@@ -34,9 +34,6 @@ public class Parser  {
         }
     }
 
-
-
-
     //checks if there is more work to do
     public boolean hasMoreLines() throws IOException {
         // Read the next line

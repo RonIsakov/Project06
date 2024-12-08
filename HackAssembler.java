@@ -23,14 +23,6 @@ public class HackAssembler {
             System.out.println("Error during assembly: " + e.getMessage());
         }
     }
-
-    public static void increment(){
-        SymbolTable.instructionAddress++;
-
-        if(SymbolTable.instructionAddress == 24576 || SymbolTable.instructionAddress == 16384){
-            SymbolTable.instructionAddress++;
-        }
-    }
     
     private static void firstPass(File inputFile, SymbolTable symbolTable) throws IOException {
         Parser parser = new Parser(inputFile);
@@ -44,7 +36,6 @@ public class HackAssembler {
                 String label = parser.symbol();
                 if (!symbolTable.contains(label)) {
                     symbolTable.addEntry(label, i);
-                    increment();
                 }
             }
             else{
@@ -57,6 +48,7 @@ public class HackAssembler {
     private static void secondPass(File inputFile, File outputFile, SymbolTable symbolTable, Code code) throws IOException {
         Parser parser = new Parser(inputFile);
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+        int counter = 16;
 
         while (parser.hasMoreLines()) {
             parser.advance();
@@ -72,17 +64,14 @@ public class HackAssembler {
                 } else {
                     // else: symbol address
                     if (symbolTable.contains(symbol)) {
-                        System.out.println("nichnas " + symbol);
                         address = symbolTable.getAddress(symbol);
                     }
                     else{
-                        symbolTable.addEntry(symbol, SymbolTable.instructionAddress);
-                        increment();
+                        symbolTable.addEntry(symbol, counter);
                         address = symbolTable.getAddress(symbol);
-                        System.out.println("not nichnas " + symbol);
+                        counter++;
                     }
                 }
-                System.out.println(address);
 
                 writer.write(String.format("0%15s", Integer.toBinaryString(address)).replace(' ', '0'));
                 writer.newLine();

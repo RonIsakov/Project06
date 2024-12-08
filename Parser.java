@@ -33,9 +33,28 @@ public class Parser  {
             return false;
         }
     }
-// Found "//", return the part after it // No "//" found, return the original string
-public String trimUntilComment(String line) {
-    if (line == null) {
+
+
+
+
+    //checks if there is more work to do
+    public boolean hasMoreLines() throws IOException {
+        // Read the next line
+        this.nextInstruction = reader.readLine();
+    
+        // Skip blank lines and comment lines
+        while (this.nextInstruction != null && (isLineComment(this.nextInstruction.trim()) || this.nextInstruction.trim().isEmpty())) {
+            this.nextInstruction = reader.readLine(); // Read the next line
+        }
+    
+        // If we reach here, either there are no more lines, or nextInstruction is valid
+        return this.nextInstruction != null;
+    }
+    
+    
+    // Found "//", return the part after it // No "//" found, return the original string
+    public String trimUntilComment(String line) {
+    if (line == null || line.isEmpty()) {
         return ""; // Return an empty string if line is null
     }
     int commentIndex = line.indexOf("//");
@@ -45,31 +64,21 @@ public String trimUntilComment(String line) {
     return line.trim(); // If no comment, just trim whitespace
 }
 
-    //checks if there is more work to do
-    public boolean hasMoreLines() throws IOException {
-        // Read the next line
-        this.nextInstruction = reader.readLine();
-    
-        // Skip blank lines and comment lines
-        while (this.nextInstruction != null && 
-               (isLineComment(this.nextInstruction.trim()) || this.nextInstruction.trim().isEmpty())) {
-            this.nextInstruction = reader.readLine(); // Read the next line
+   // delets all spaces
+   public String removeAllWhiteSpaces (String line) {
+        if (line == null || line.isEmpty()) {
+            return line; // Return the original string if null or empty
         }
-    
-        // If we reach here, either there are no more lines, or nextInstruction is valid
-        return this.nextInstruction != null;
+        return line.replaceAll("\\s+", ""); // Remove all white spaces
     }
-    
-    
-    
-        
-    
+   
 
     //gets the next instruction and makes it the current instruction 
     //if there is a valid next instruction return true else false
     public boolean advance() throws IOException {
         if (this.nextInstruction != null || this.hasMoreLines()) {
-            this.currentInstruction = this.nextInstruction.trim();
+            this.currentInstruction = removeAllWhiteSpaces(this.nextInstruction);
+            this.currentInstruction = trimUntilComment(this.currentInstruction);
             this.nextInstruction = null; // Clear `nextInstruction` for the next call
             return true;
         }
@@ -143,5 +152,5 @@ public String trimUntilComment(String line) {
         return null;
         } 
         
-    }
-
+    
+}

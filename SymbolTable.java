@@ -42,12 +42,6 @@ public class SymbolTable {
         return this.symbolTable.get(symbol);
     }
     
-    public void increment(){
-        instructionAddress++;
-
-        if(instructionAddress == 24576 || instructionAddress == 16384){
-            instructionAddress++;
-        }
-    }
+    
 
 }
